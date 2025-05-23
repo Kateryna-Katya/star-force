@@ -73,7 +73,7 @@
 }
 @media only screen and (min-width: 1439px) {
  .game-section{
-    background-image: none;
+background-image: none;
  }
  .game-title{
     text-align: left;
@@ -124,17 +124,14 @@
 }
 @media only screen and (min-width: 1439px) {
     .highlights-section {
-        background-image: none;
-    }
-    .highlights-wrapper{
-        display: flex;
-        align-items: start;
-        gap: 167px;
-        margin-top: -180px;
-        margin-bottom: 20px;
+        background-image: url("/img/highlights/img-one@2x.png"), url("/img/highlights/img-two@2x.png");
+        background-repeat: no-repeat, no-repeat;
+        background-position: top 140px left 80px, top 140px right 110px;
+        background-size: 847px 330px, 256px 183px;
     }
 .highlights-title{
     text-align: left;
+    margin-bottom: 360px;
 }
 .highlights-list{
     flex-direction: row;
