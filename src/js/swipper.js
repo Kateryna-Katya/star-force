@@ -1,5 +1,7 @@
 import Swiper from 'swiper';
+import { Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/navigation';
 
 const swiperConfigs = [
   {
@@ -59,7 +61,7 @@ function initSwipers() {
     else if (config.selector === '.reviews-swiper') {
       if (screenWidth < 1439) {
         const swiper = new Swiper(container, {
-          slidesPerView: 1.5,
+          slidesPerView: 1,
           spaceBetween: 20,
           loop: true,
           slideClass: config.slideClass,
@@ -74,6 +76,7 @@ function initSwipers() {
     else if (config.selector === '.gallery-swiper') {
       const slidesPerView = screenWidth < 374 ? 1.1 : screenWidth < 1439 ? 1.7 : 6;
       const swiper = new Swiper(container, {
+        modules: [Navigation],
         slidesPerView,
         spaceBetween: 20,
         loop: true,

@@ -169,12 +169,94 @@
 }
 }
 /*  Gallery */
+.gallery-title{
+    margin-bottom: 28px;
+}
 .gallery-swiper-slide{
     cursor: pointer;
 }
-
-
-
-
-
+.custom-navigation {
+    display: none;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+ }
+@media only screen and (min-width: 1439px) {
+.gallery-title {
+    text-align: left;
+ margin-bottom: 36px;
+ } 
+ .gallery-container{
+    position: relative;
+ } 
+ .custom-navigation {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     opacity: 1;
+     pointer-events: auto;
+     position: absolute;
+     bottom:10px;
+     left:49%;
+     transform: translateX(-52%);
+     width: 6%;
+     z-index: 10;
+    
+ }
+.custom-prev,
+.custom-next {
+    background: inherit;
+    border: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.custom-next{
+    transform: rotate(180deg);
+}
+}
 /*   Player Reviews */
+.reviews-title{
+    margin-bottom: 28px;
+}
+.reviews-swiper-slide{
+    cursor: pointer;
+    border: 1px solid #2b7eac;
+        border-radius: 20px;
+        padding: 26px 33px;
+}
+.reviews-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.reviews-author{
+    font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 1.5;
+        color: #2b7eac;
+}
+.reviews-text{
+    text-align: left;
+}
+@media only screen and (min-width: 1439px) {
+.reviews-title {
+ margin-bottom: 36px; 
+ text-align: left;
+} 
+.reviews-swiper-wrapper{
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+gap: 20px;
+}
+.reviews-swiper-slide{
+    border: 1px solid #2b7eac;
+        border-radius: 20px;
+        padding: 26px 33px;
+        max-width: 413px;
+        height: 184px;
+}
+}
