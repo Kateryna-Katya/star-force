@@ -8,23 +8,19 @@ const swiperConfigs = [
     wrapperClass: 'ship-swiper-wrapper',
   },
   {
-    selector: '.play-swiper',
-    slideClass: 'play-swiper-slide',
-    wrapperClass: 'play-swiper-wrapper',
-    paginationItemSelector: '.play-pagination-item',
+    selector: '.reviews-swiper',
+    slideClass: 'reviews-swiper-slide',
+    wrapperClass: 'reviews-swiper-wrapper',
   },
   {
-    selector: '.user-swiper',
-    slideClass: 'user-swiper-slide',
-    wrapperClass: 'user-swiper-wrapper',
-    paginationItemSelector: '.user-pagination-item',
+    selector: '.gallery-swiper',
+    slideClass: 'gallery-swiper-slide',
+    wrapperClass: 'gallery-swiper-wrapper',
+    navigation: {
+      nextEl: '.gallery-nav .custom-next',
+      prevEl: '.gallery-nav .custom-prev',
+    },
   },
-  {
-    selector: '.gameplay-swiper',
-    slideClass: 'gameplay-swiper-slide',
-    wrapperClass: 'gameplay-swiper-wrapper',
-    paginationItemSelector: '.gameplay-pagination-item',
-  }
 ];
 
 const swiperInstances = {};
@@ -38,132 +34,64 @@ function initSwipers() {
 
     const id = config.selector;
 
-    // Destroy existing swiper if exists
+    // Destroy existing swiper
     if (swiperInstances[id]) {
       swiperInstances[id].destroy(true, true);
       delete swiperInstances[id];
-      clearPagination(config.paginationItemSelector);
     }
 
-    const isProgressSwiper = config.selector === '.user-swiper';
-
-    if (isProgressSwiper) {
-      // Progress bar swiper (user-swiper)
+    // === SHIP SWIPER ===
+    if (config.selector === '.ship-swiper') {
       if (screenWidth < 1439) {
-        const swiper = new Swiper(id, {
-          slidesPerView: 1,
+        const swiper = new Swiper(container, {
+          slidesPerView: 1.1,
           spaceBetween: 10,
           loop: true,
           slideClass: config.slideClass,
           wrapperClass: config.wrapperClass,
           direction: 'horizontal',
-          on: {
-            init: function () {
-              updatePagination(config.paginationItemSelector, this.realIndex);
-            },
-            slideChange: function () {
-              updatePagination(config.paginationItemSelector, this.realIndex);
-            },
-          },
         });
-
-        swiperInstances[id] = swiper;
-
-        const paginationItems = document.querySelectorAll(config.paginationItemSelector);
-        paginationItems.forEach((item, index) => {
-          item.addEventListener('click', () => {
-            swiper.slideToLoop(index);
-          });
-        });
-      } else {
-        const swiper = new Swiper(id, {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          loop: true,
-          slideClass: config.slideClass,
-          wrapperClass: config.wrapperClass,
-          direction: 'horizontal',
-          allowTouchMove: true,
-          on: {
-            init: function () {
-              updateProgressBar(this);
-            },
-            slideChange: function () {
-              updateProgressBar(this);
-            },
-          },
-        });
-
         swiperInstances[id] = swiper;
       }
-    } else {
-      // Other swipers (advantages, play, gameplay)
+    }
+
+    // === REVIEWS SWIPER ===
+    else if (config.selector === '.reviews-swiper') {
       if (screenWidth < 1439) {
-        const swiper = new Swiper(id, {
-          slidesPerView: 1.15,
+        const swiper = new Swiper(container, {
+          slidesPerView: 1.5,
           spaceBetween: 20,
           loop: true,
           slideClass: config.slideClass,
           wrapperClass: config.wrapperClass,
           direction: 'horizontal',
-          on: {
-            init: function () {
-              updatePagination(config.paginationItemSelector, this.realIndex);
-            },
-            slideChange: function () {
-              updatePagination(config.paginationItemSelector, this.realIndex);
-            },
-          },
         });
-
         swiperInstances[id] = swiper;
-
-        const paginationItems = document.querySelectorAll(config.paginationItemSelector);
-        paginationItems.forEach((item, index) => {
-          item.addEventListener('click', () => {
-            swiper.slideToLoop(index);
-          });
-        });
-      } else {
-        // Destroy swiper on desktop for non-progress ones
-        if (swiperInstances[id]) {
-          swiperInstances[id].destroy(true, true);
-          delete swiperInstances[id];
-          clearPagination(config.paginationItemSelector);
-        }
       }
+    }
+
+    // === GALLERY SWIPER ===
+    else if (config.selector === '.gallery-swiper') {
+      const slidesPerView = screenWidth < 374 ? 1.1 : screenWidth < 1439 ? 1.7 : 6;
+      const swiper = new Swiper(container, {
+        slidesPerView,
+        spaceBetween: 20,
+        loop: true,
+        slideClass: config.slideClass,
+        wrapperClass: config.wrapperClass,
+        direction: 'horizontal',
+        navigation: config.navigation,
+      });
+      swiperInstances[id] = swiper;
     }
   });
 }
 
-function updatePagination(paginationSelector, activeIndex) {
-  const items = document.querySelectorAll(paginationSelector);
-  items.forEach((item, index) => {
-    item.classList.toggle('active', index === activeIndex);
-  });
-}
-
-function clearPagination(paginationSelector) {
-  const items = document.querySelectorAll(paginationSelector);
-  items.forEach(item => item.classList.remove('active'));
-}
-
-function updateProgressBar(swiper) {
-  if (!swiper) return;
-
-  let progressBar;
-  if (swiper.el.classList.contains('user-swiper')) {
-    progressBar = document.querySelector('.pag_bar');
-  }
-
-  if (!progressBar) return;
-
-  const total = swiper.slides.length - (swiper.loopedSlides * 0.1);
-  const currentIndex = swiper.realIndex;
-  const percent = ((currentIndex + 1) / total) * 100;
-  progressBar.style.width = `${percent}%`;
-}
-
-// Init
+// Init on page load
 document.addEventListener('DOMContentLoaded', initSwipers);
-window.addEventListener('resize', initSwipers);
+
+// Re-init on resize (with debounce)
+window.addEventListener('resize', () => {
+  clearTimeout(window._swiperResizeTimeout);
+  window._swiperResizeTimeout = setTimeout(initSwipers, 300);
+});
